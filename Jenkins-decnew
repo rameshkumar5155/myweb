@@ -9,14 +9,14 @@ pipeline {
         stage("build") {
             steps {
                 sh "mvn clean package"
-                sh " target/myweb.war"
+                sh "mv target/*.war target/myweb.war"
                }
             }
         stage("deploy-dev"){
             steps{
                 sshagent(['ssh']) {
                 sh """
-                    scp -o StrictHostKeyChecking=no target/myweb.war  ec2-user@15.206.70.38:/home/ec2-user/apache-tomcat-9.0.64/webapps/
+                    scp -o StrictHostKeyChecking=no /webapps/target/myweb.war  ec2-user@15.206.70.38:/home/ec2-user/apache-tomcat-9.0.64/webapps/
                     
                     ssh ec2-user@15.206.70.38 /homeec2-user/apache-tomcat-9.0.64/bin/shutdown.sh
                     
